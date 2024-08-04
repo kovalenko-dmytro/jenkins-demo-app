@@ -52,14 +52,18 @@ pipeline {
                     }
                 }
         stage('Build') {
-            script {
-                echo "There will be build stage"
+            steps {
+                script {
+                    echo "There will be build stage"
+                }
             }
         }
 
         stage('Tests') {
-            script {
-                echo "There will be tests stage"
+            steps {
+                script {
+                    echo "There will be tests stage"
+                }
             }
         }
     }
