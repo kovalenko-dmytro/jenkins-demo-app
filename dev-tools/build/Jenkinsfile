@@ -19,9 +19,7 @@ def run_build
 
 pipeline {
 
-    agent {
-        label 'docker && build'
-    }
+    agent any
 
     options {
         skipStagesAfterUnstable()
