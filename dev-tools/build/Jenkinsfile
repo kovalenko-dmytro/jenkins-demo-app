@@ -24,8 +24,6 @@ pipeline {
     }
 
     options {
-        ansiColor colorMapName: 'XTerm'
-        buildDiscarder(logRotator(numToKeepStr: '3'))
         skipStagesAfterUnstable()
     }
 
