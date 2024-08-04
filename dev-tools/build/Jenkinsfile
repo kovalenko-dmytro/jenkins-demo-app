@@ -69,5 +69,19 @@ pipeline {
                 }
             }
         }
+        stage('DB init & migration') {
+            steps {
+                script {
+                   echo "There will be DB migration stage"
+                }
+            }
+        }
+        stage('Docker build') {
+            steps {
+               script {
+                  echo "There will be Docker build stage"
+               }
+            }
+        }
     }
 }
