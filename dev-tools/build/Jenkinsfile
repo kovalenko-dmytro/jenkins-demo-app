@@ -58,13 +58,14 @@ pipeline {
             steps {
                 script {
                    echo "There will be build stage"
+                   sh "mvn clean package -Dmaven.test.skip=true"
                 }
             }
         }
         stage('Tests') {
             steps {
                 script {
-                   echo "There will be build stage"
+                   sh "mvn test"
                 }
             }
         }
