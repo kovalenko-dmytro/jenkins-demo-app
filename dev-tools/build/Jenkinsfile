@@ -9,18 +9,31 @@ def base_dir = "./build-cache"
 def maven_home = "$base_dir/maven/" + maven_url.replaceFirst(file_name_regex, "")
 def java_home = "$base_dir/java/" + jdk_url.replaceFirst(file_name_regex, "")
 
+def docker_repo_prefix = "jenkins_demo"
+def local_repo_dir = ".repository"
+def docker_copy_libs = "docker_copy_libs"
+
+def tag_name
+def pom_info
+def run_build
+
 pipeline {
 
-    agent any
-
-    environment {
-        MAVEN_HOME = "$maven_home"
-        JAVA_HOME = "$java_home"
-        PATH = "$maven_home/bin:$java_home/bin:$PATH"
+    agent {
+        label 'docker && build'
     }
 
     options {
+        ansiColor colorMapName: 'XTerm'
+        buildDiscarder(logRotator(numToKeepStr: '3'))
         skipStagesAfterUnstable()
+    }
+
+    environment {
+        DOCKER_PATH = tool(name: "docker-latest", type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool')
+        MAVEN_HOME = "$maven_home"
+        JAVA_HOME = "$java_home"
+        PATH = "$maven_home/bin:$java_home/bin:$PATH"
     }
 
     stages {
@@ -52,6 +65,12 @@ pipeline {
 
                    sh "mvn -v"
                    sh "java -version"
+                   tag_name = env.BRANCH_NAME.
+                   run_build = true
+                   def ci_build = sh(script: "git log -1 | grep '\\[maven-release-plugin\\]'", returnStatus: true)
+                   if (ci_build == 0) {
+                        run_build = false
+                   }
                 }
             }
         }
