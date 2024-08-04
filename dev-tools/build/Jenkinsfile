@@ -1,9 +1,9 @@
-//------------------------------------------------------------------------------
+/* //------------------------------------------------------------------------------
 // JenkinsFile
 //------------------------------------------------------------------------------
 def maven_url = "https://dlcdn.apache.org/maven/maven-3/3.9.8/binaries/apache-maven-3.9.8-bin.zip"
 def jdk_url = "https://aka.ms/download-jdk/microsoft-jdk-17.0.11-linux-x64.tar.gz"
-def file_name_regex = "^.*/"
+def file_name_regex = "^.*//* "
 def parent_path_regex = "/([^/]+)\$"
 def base_dir = "./build-cache"
 def maven_home = "$base_dir/maven/" + maven_url.replaceFirst(file_name_regex, "")
@@ -34,8 +34,8 @@ pipeline {
                         sh "curl -sLf $maven_url -o $maven_zip"
                         sh "unzip -q $maven_zip -d $maven_home"
                         sh "rm -f $maven_zip"
-                        def unzipped_maven_dir = sh(script: "readlink -f $maven_home/*", returnStdout: true).trim()
-                        sh "mv $unzipped_maven_dir/* $maven_home"
+                        def unzipped_maven_dir = sh(script: "readlink -f $maven_home *//*", returnStdout: true).trim()
+                        sh "mv $unzipped_maven_dir *//* $maven_home"
                         sh "rm -rf $unzipped_maven_dir"
                     }
 
@@ -66,6 +66,30 @@ pipeline {
                 script {
                    echo "There will be build stage"
                 }
+            }
+        }
+    }
+} */
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'make'
+            }
+        }
+        stage('Test'){
+            steps {
+                sh 'make check'
+                junit 'reports/**/*.xml'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'make publish'
             }
         }
     }
