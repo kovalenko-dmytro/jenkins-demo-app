@@ -10,12 +10,13 @@ def maven_home = "$base_dir/maven/" + maven_url.replaceFirst(file_name_regex, ""
 def java_home = "$base_dir/java/" + jdk_url.replaceFirst(file_name_regex, "")
 
 pipeline {
+
     agent any
 
     environment {
-       MAVEN_HOME = "$maven_home"
-       JAVA_HOME = "$java_home"
-       PATH = "$maven_home/bin:$java_home/bin:$PATH"
+        MAVEN_HOME = "$maven_home"
+        JAVA_HOME = "$java_home"
+        PATH = "$maven_home/bin:$java_home/bin:$PATH"
     }
 
     options {
@@ -54,33 +55,34 @@ pipeline {
                 }
             }
         }
-        stage('Build'){
+        stage('Application build') {
             steps {
                 script {
-                   echo "There will be build stage"
-                   sh "mvn clean package -Dmaven.test.skip=true"
+                    echo "There will be application build stage"
+                    sh "mvn clean package -Dmaven.test.skip=true"
                 }
             }
         }
-        stage('Tests') {
+        stage('Application tests') {
             steps {
                 script {
-                   sh "mvn test"
+                    echo "There will be application build stage"
+                    sh "mvn test"
                 }
             }
         }
         stage('DB init & migration') {
             steps {
                 script {
-                   echo "There will be DB migration stage"
+                    echo "There will be DB migration stage"
                 }
             }
         }
         stage('Docker build') {
             steps {
-               script {
-                  echo "There will be Docker build stage"
-               }
+                script {
+                    echo "There will be Docker build stage"
+                }
             }
         }
     }
