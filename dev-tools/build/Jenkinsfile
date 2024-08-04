@@ -51,5 +51,16 @@ pipeline {
                         }
                     }
                 }
+        stage('Build') {
+            script {
+                echo "There will be build stage"
+            }
+        }
+
+        stage('Tests') {
+            script {
+                echo "There will be tests stage"
+            }
+        }
     }
 }
